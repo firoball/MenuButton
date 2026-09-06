@@ -1,0 +1,34 @@
+.ui-menu-button {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 20px;
+    padding: 0 4px 0 6px;
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: rgba(0, 0, 0, 0.35);
+    background-color: rgb(68, 68, 68);
+    color: rgb(210, 210, 210);
+    font-size: 11px;
+    -unity-text-align: middle-left;
+}
+
+.ui-menu-button:hover {
+    background-color: rgb(80, 80, 80);
+}
+
+.ui-menu-button:active {
+    background-color: rgb(56, 56, 56);
+}
+
+.ui-menu-button__arrow {
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 4px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: rgb(210, 210, 210);
+}
