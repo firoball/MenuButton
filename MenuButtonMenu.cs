@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace Ui.Controls
+namespace UI.Controls
 {
     /// <summary>
     /// Populates and shows the dropdown for a <see cref="MenuButton"/>. API mirrors

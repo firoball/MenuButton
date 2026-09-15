@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Ui.Controls
+namespace UI.Controls
 {
     /// <summary>
     /// Loads and caches MenuButton's stylesheet so every instance is styled without

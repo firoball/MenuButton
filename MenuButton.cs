@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Ui.Controls
+namespace UI.Controls
 {
     /// <summary>
     /// UnityEditor-independent replacement for UnityEditor.UIElements.ToolbarMenu.
