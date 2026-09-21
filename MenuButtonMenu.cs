@@ -10,12 +10,41 @@ namespace UI.Controls
     /// </summary>
     public class MenuButtonMenu
     {
+        private static MenuButtonMenu openMenu;
+
         private readonly GenericDropdownMenu dropdownMenu = new GenericDropdownMenu();
         private readonly VisualElement anchor;
+        private readonly VisualElement outerContainer;
+        private readonly VisualElement menuRoot;
+        private bool defaultAppearance;
+        private bool globalHandlerRegistered;
 
-        internal MenuButtonMenu(VisualElement anchor)
+        /// <summary>If true, uses GenericDropdownMenu's own default appearance instead of MenuButton's color scheme.</summary>
+        public bool useDefaultAppearance
+        {
+            get => defaultAppearance;
+            set
+            {
+                defaultAppearance = value;
+                if (value)
+                    MenuButtonStyle.Remove(outerContainer);
+                else
+                    MenuButtonStyle.Apply(outerContainer);
+            }
+        }
+
+        internal MenuButtonMenu(VisualElement anchor, bool useDefaultAppearance = false)
         {
             this.anchor = anchor;
+
+            outerContainer = dropdownMenu.contentContainer;
+            while (outerContainer != null && !outerContainer.ClassListContains(GenericDropdownMenu.containerOuterUssClassName))
+                outerContainer = outerContainer.parent;
+            outerContainer ??= dropdownMenu.contentContainer;
+            menuRoot = outerContainer.parent ?? outerContainer;
+
+            menuRoot.RegisterCallback<DetachFromPanelEvent>(OnMenuDetached);
+            this.useDefaultAppearance = useDefaultAppearance;
         }
 
         public void AppendAction(string actionName, Action<DropdownMenuAction> action,
@@ -49,7 +78,36 @@ namespace UI.Controls
 
         internal void Show()
         {
-            dropdownMenu.DropDown(anchor.worldBound, anchor, true);
+            if (openMenu != null && openMenu != this)
+                openMenu.menuRoot.RemoveFromHierarchy();
+
+            dropdownMenu.DropDown(anchor.worldBound, anchor, DropdownMenuSizeMode.Content);
+            openMenu = this;
+
+            if (!globalHandlerRegistered)
+            {
+                anchor.panel.visualTree.RegisterCallback<PointerDownEvent>(OnOutsidePointerDown, TrickleDown.TrickleDown);
+                globalHandlerRegistered = true;
+            }
+        }
+
+        // Closes this popup on any click outside it, regardless of what's clicked (another MenuButton,
+        // a DropdownField, empty space) - not just other MenuButtons like the openMenu tracking above covers.
+        private void OnOutsidePointerDown(PointerDownEvent evt)
+        {
+            if (!menuRoot.Contains(evt.target as VisualElement))
+                menuRoot.RemoveFromHierarchy();
+        }
+
+        private void OnMenuDetached(DetachFromPanelEvent evt)
+        {
+            if (globalHandlerRegistered)
+            {
+                evt.originPanel?.visualTree.UnregisterCallback<PointerDownEvent>(OnOutsidePointerDown, TrickleDown.TrickleDown);
+                globalHandlerRegistered = false;
+            }
+            if (openMenu == this)
+                openMenu = null;
         }
     }
 }

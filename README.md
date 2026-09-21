@@ -53,12 +53,29 @@ fileMenu.menu.AppendAction("Save", a => Save(),
 
 ```xml
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <Ui.Controls.MenuButton text="File" />
+    <UI.Controls.MenuButton text="File" />
 </ui:UXML>
 ```
 
 Populate `menu` from code after the control is queried from the panel, same as you
 would with a `ToolbarMenu` placed via UXML.
+
+## Popup appearance
+
+By default the dropdown popup is styled to match `MenuButton`'s own color scheme
+rather than `GenericDropdownMenu`'s built-in look. To use Unity's default
+black-on-white dropdown appearance instead, either pass it to the constructor:
+
+```csharp
+var fileMenu = new MenuButton("File", useDefaultMenuAppearance: true);
+```
+
+or set it any time (also usable as a UXML attribute, `use-default-menu-appearance="true"`):
+
+```csharp
+fileMenu.useDefaultMenuAppearance = true;
+```
+
 
 ## License
 

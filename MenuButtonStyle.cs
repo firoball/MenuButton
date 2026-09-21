@@ -23,6 +23,13 @@ namespace UI.Controls
                 target.styleSheets.Add(sheet);
         }
 
+        public static void Remove(VisualElement target)
+        {
+            var sheet = Override != null ? Override : cached;
+            if (sheet != null)
+                target.styleSheets.Remove(sheet);
+        }
+
         public static void ResetCache()
         {
             cached = null;
